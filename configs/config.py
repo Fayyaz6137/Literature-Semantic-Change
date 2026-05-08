@@ -10,7 +10,7 @@ DECADES = {
     '1960s': (1960, 1980),
 }
 
-MAX_BOOKS_PER_DECADE = 5  # how many books to download per period 150
+MAX_BOOKS_PER_DECADE = 50  # how many books to download per period 150
 DELAY = 0.5  # seconds between requests (be polite)
 MIN_LENGTH = 5000  # skip files shorter than this (bad downloads)
 HEADERS = {'User-Agent': 'Mozilla/5.0 (compatible; academic-nlp-project/1.0)'}

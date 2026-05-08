@@ -61,9 +61,9 @@ def preprocess_text(text):
     # 7. Remove very short words (1-2 chars, usually noise)
     tokens = [t for t in tokens if len(t) > 2]
 
-    # NOTE: For distributional semantics, we do NOT remove stopwords.
+    # For distributional semantics, we do NOT remove stopwords.
     # Stopwords provide crucial co-occurrence context for Word2Vec.
-    # Remove them only for WEAT word sets, not during embedding training.
+    # Removing them only for WEAT word sets, won't remove during embedding training.
 
     return tokens
 

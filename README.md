@@ -1,48 +1,43 @@
 
 # 🗂 Project Structure
-```python
+```bash
 literature_semantics_project/
 │
 ├── README.md
 ├── requirements.txt
-├── setup.py
+├── main.py
 ├── .gitignore
 │
 ├── configs/
-│   ├── data_config.yaml
-│   ├── model_config.yaml
-│   └── weat_config.yaml
+│   ├── config.py
+│   └── verify_setup.py
 │
 ├── data/
-│   ├── raw/                  # original Gutenberg texts (unprocessed)
-│   ├── interim/             # partially cleaned data
-│   ├── processed/           # final tokenized corpus per decade
-│   └── external/           # metadata (catalog, CSV, etc.)
+│   ├── catalog/                          # metadata (catalog, CSV, etc.)
+│   ├── processed/                        # final tokenized corpus per decade
+│   └── raw/                              # original Gutenberg texts (unprocessed)
 │
 ├── src/
-│   └── lit_semantics/
-│       │
-│       ├── __init__.py
-│       │
-│       ├── data/
-│       │   ├── download.py        # Gutenberg download logic
-│       │   ├── build_catalog.py   # metadata parsing
-│       │   └── dataset.py         # dataset loading utilities
-│       │
-│       ├── preprocessing/
-│       │   ├── clean_text.py      # boilerplate removal
-│       │   ├── tokenize.py        # tokenization logic
-│       │   └── pipeline.py        # full preprocessing pipeline
-│       │
-│       ├── models/
-│       │   ├── word2vec.py        # baseline Word2Vec training
-│       │   ├── cade_model.py      # CADE wrapper
-│       │   └── embeddings.py      # embedding utilities
-│       │
-│       ├── analysis/
-│       │   ├── semantic_change.py # cosine drift computation
-│       │   ├── weat.py            # WEAT + SWEAT implementation
-│       │   └── similarity.py      # cosine similarity helpers
+│   │
+│   ├── __init__.py
+│   │
+│   ├── data/
+│   │   ├── fetch_csv.py                  # Download Gutenberg Catalog
+│   │   └── fetch_corpus.py               # Download Raw Data of Books
+│   │
+│   ├── preprocessing/
+│   │   ├── pre_processing_data.py        # boilerplate removal + tokenization 
+│   │   └── verify_preprocessing.py       
+│   │
+│   ├── models/
+│   │   ├── word2vec.py           # baseline Word2Vec training
+│   │   ├── cade_model.py         # CADE wrapper
+│   │   └── embeddings.py         # embedding utilities
+│   │
+│   ├── analysis/
+│       ├── semantic_change.py    # cosine drift computation
+│       │   ├── weat.py           # WEAT + SWEAT implementation
+│       │   └── similarity.py     # cosine similarity helpers
 │       │
 │       ├── evaluation/
 │       │   ├── metrics.py         # statistical tests
