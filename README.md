@@ -19,9 +19,6 @@ literature_semantics_project/
 │   └── raw/                              # original Gutenberg texts (unprocessed)
 │
 ├── src/
-│   │
-│   ├── __init__.py
-│   │
 │   ├── data/
 │   │   ├── fetch_csv.py                  # Download Gutenberg Catalog
 │   │   └── fetch_corpus.py               # Download Raw Data of Books
