@@ -10,6 +10,7 @@ literature_semantics_project/
 │
 ├── configs/
 │   ├── config.py
+│   ├── clean_files.py
 │   └── verify_setup.py
 │
 ├── data/
@@ -30,60 +31,29 @@ literature_semantics_project/
 │   │   └── verify_preprocessing.py       
 │   │
 │   ├── models/
-│   │   ├── word2vec.py           # baseline Word2Vec training
-│   │   ├── cade_model.py         # CADE wrapper
-│   │   └── embeddings.py         # embedding utilities
+│   │   ├── train_word2vec.py           # baseline Word2Vec training
+│   │   └── train_CAD.py                # CADE wrapper
 │   │
 │   ├── analysis/
-│       ├── semantic_change.py    # cosine drift computation
-│       │   ├── weat.py           # WEAT + SWEAT implementation
-│       │   └── similarity.py     # cosine similarity helpers
-│       │
-│       ├── evaluation/
-│       │   ├── metrics.py         # statistical tests
-│       │   └── validation.py      # sanity checks
-│       │
-│       ├── visualization/
-│       │   ├── plots.py           # all plotting functions
-│       │   ├── pca.py             # dimensionality reduction
-│       │   └── timelines.py       # temporal plots
-│       │
-│       └── utils/
-│           ├── logging.py
-│           ├── io.py              # save/load models, csv, etc.
-│           └── helpers.py
-│
-├── scripts/                       # CLI entry points (important!)
-│   ├── 01_download_data.py
-│   ├── 02_preprocess.py
-│   ├── 03_train_word2vec.py
-│   ├── 04_train_cade.py
-│   ├── 05_semantic_change.py
-│   ├── 06_weat_analysis.py
-│   └── 07_generate_plots.py
-│
-├── notebooks/                     # ONLY for exploration
-│   ├── 00_exploration.ipynb
-│   ├── 01_testing_pipeline.ipynb
-│   └── 02_results_visualization.ipynb
+│       ├── data_explore.py   
+│       ├── semantic_change.py
+│       ├── weat_bias.py
+│       └── visualizations.py
 │
 ├── models/
-│   ├── word2vec_baseline/
-│   ├── cade_compass/
-│   └── cade_slices/
+│   ├── cad_slices/
+│   ├── cade_compass.model
+│   └── word2vec.model
 │
 ├── results/
-│   ├── tables/
 │   ├── figures/
-│   └── weat_outputs/
+│   ├── all_change_score.csv
+│   ├── drift_timeline.csv
+│   ├── sweat_agency_result.csv
+│   ├── sweat_communal_result.csv
+│   └── nearest_neighbours.json
 │
-├── tests/
-│   ├── test_preprocessing.py
-│   ├── test_embeddings.py
-│   └── test_weat.py
-│
-└── docs/
-    ├── report.md
-    ├── slides_outline.md
-    └── viva_notes.md
+└── Reports/
+    ├── Project Report
+    └──Project Slides
 ```
