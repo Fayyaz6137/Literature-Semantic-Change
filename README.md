@@ -31,8 +31,8 @@ literature_semantics_project/
 │   │   └── verify_preprocessing.py       
 │   │
 │   ├── models/
-│   │   ├── train_word2vec.py           # baseline Word2Vec training
-│   │   └── train_CAD.py                # CADE wrapper
+│   │   ├── train_word2vec.py             # baseline Word2Vec training
+│   │   └── train_CAD.py                  # CADE wrapper
 │   │
 │   ├── analysis/
 │       ├── data_explore.py   
