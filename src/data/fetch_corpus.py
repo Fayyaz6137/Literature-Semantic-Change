@@ -5,11 +5,12 @@ import time
 import requests
 import pandas as pd
 from tqdm import tqdm
-from configs.config import DECADES, MAX_BOOKS_PER_DECADE, DELAY, MIN_LENGTH, HEADERS
+from configs.config import DECADES, MAX_BOOKS_PER_DECADE, DELAY, MIN_LENGTH, HEADERS, DATA_RAW_DIR, ENG_BOOKS_EXCEL, \
+    BOOKS_JSON_PATH, DATA_RAW_TEXT_PATH
 
 
 def get_corpus_data(df):
-    os.makedirs('data/raw', exist_ok=True)
+    os.makedirs(DATA_RAW_DIR, exist_ok=True)
     book_ids = build_book_ids(df)
     download_all(book_ids)
     combine()
@@ -24,25 +25,31 @@ def pub_year(authors_str):
     """
     if pd.isna(authors_str):
         return None
+
     years = [int(y) for y in re.findall(r'\b(\d{4})\b', str(authors_str))
              if 1700 < int(y) < 2000]
+
     if len(years) >= 2:
-        return int((years[0] + years[1]) / 2)  # midpoint of birth-death
+        return int((years[0] + years[1]) / 2) + 10  # midpoint of birth-death
     if len(years) == 1:
-        return years[0] + 40  # birth year + 40
+        return years[0] + 28  # birth year + 30
     return None
 
 
 # ── Step 3: Build list of book IDs per decade ──────────────────────────
+
 def build_book_ids(df):
     # Keep only English plain-text books
     df = df[(df['Language'] == 'en') & (df['Type'] == 'Text')].copy()
     print(f"English text entries: {len(df):,}\n")
 
     # Add estimated publication year  <- THE FIX
+
     df['pub_year'] = df['Authors'].apply(pub_year)
+
     df = df.dropna(subset=['pub_year'])
     df['pub_year'] = df['pub_year'].astype(int)
+    df.to_excel(ENG_BOOKS_EXCEL, index=False)
 
     book_ids = {}
     for decade, (start, end) in DECADES.items():
@@ -55,7 +62,7 @@ def build_book_ids(df):
         book_ids[decade] = ids[:MAX_BOOKS_PER_DECADE]
         print(f"  {decade} ({start}-{end}): {len(book_ids[decade])} books queued")
 
-    with open('data/catalog/book_ids_by_decade.json', 'w') as f:
+    with open(BOOKS_JSON_PATH, 'w') as f:
         json.dump(book_ids, f, indent=2)
 
     print("\nBook IDs saved to data/catalog/book_ids_by_decade.json")
@@ -83,7 +90,7 @@ def download_book(book_id):
 # ── Step 5: Download all decades ──────────────────────────────────────
 def download_all(book_ids):
     for decade, ids in book_ids.items():
-        out_path = f'data/raw/lit_{decade}.txt'
+        out_path = f'{DATA_RAW_DIR}/lit_{decade}.txt'
 
         # Skip if already done
         if os.path.exists(out_path) and os.path.getsize(out_path) > 10_000:
@@ -104,7 +111,7 @@ def download_all(book_ids):
                 ok += 1
             time.sleep(DELAY)
 
-        with open(out_path, 'w', encoding='utf-8', errors='ignore') as f:
+        with open(out_path, 'a', encoding='utf-8', errors='ignore') as f:
             f.write('\n\n'.join(texts))
 
         size_mb = os.path.getsize(out_path) / 1024 / 1024
@@ -114,10 +121,10 @@ def download_all(book_ids):
 # ── Step 6: Combine into one file for the CADE compass ────────────────
 def combine():
     out_path = 'data/raw/lit_all.txt'
-    print(f"\nCombining all decades into {out_path}...")
-    with open(out_path, 'w', encoding='utf-8', errors='ignore') as out:
+    print(f"\nCombining all decades into {DATA_RAW_TEXT_PATH}...")
+    with open(out_path, 'a', encoding='utf-8', errors='ignore') as out:
         for decade in DECADES:
-            src = f'data/raw/lit_{decade}.txt'
+            src = f'{DATA_RAW_DIR}/lit_{decade}.txt'
             if os.path.exists(src) and os.path.getsize(src) > 1000:
                 with open(src, 'r', encoding='utf-8', errors='ignore') as f:
                     out.write(f.read())
@@ -132,7 +139,7 @@ def print_summary():
     print("  DOWNLOAD SUMMARY")
     print("=" * 50)
     for decade in DECADES:
-        path = f'data/raw/lit_{decade}.txt'
+        path = f'{DATA_RAW_DIR}/lit_{decade}.txt'
         if os.path.exists(path):
             mb = os.path.getsize(path) / 1024 / 1024
             flag = "OK" if mb > 0.1 else "EMPTY - rerun script"

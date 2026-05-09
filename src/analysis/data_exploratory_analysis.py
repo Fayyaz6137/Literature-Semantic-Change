@@ -1,11 +1,11 @@
+from configs.config import DECADES_LIST, DATA_RAW_DIR
+
+
 def data_exploration():
     import os
 
-    decades = ['1800s', '1820s', '1840s', '1860s', '1880s',
-               '1900s', '1920s', '1940s', '1960s']
-
-    for decade in decades:
-        path = f'data/raw/lit_{decade}.txt'
+    for decade in DECADES_LIST:
+        path = f'{DATA_RAW_DIR}/lit_{decade}.txt'
         if os.path.exists(path):
             with open(path, 'r', encoding='utf-8', errors='ignore') as f:
                 lines = f.readlines()

@@ -1,7 +1,9 @@
 import os
 import re
-import nltk
-from nltk.tokenize import word_tokenize
+# import nltk
+# from nltk.tokenize import word_tokenize
+
+from configs.config import DECADES, DECADES_LIST, DATA_PROCESSED_DIR, DATA_CLEAN_TEXT_PATH, DATA_RAW_DIR
 
 # Gutenberg header/footer sentinel strings
 HEADER_END = [
@@ -68,18 +70,32 @@ def preprocess_text(text):
     return tokens
 
 
-def preprocess_file(input_path, output_path, chunk_size=200):
+def combine(output_path):
+    # out_path = 'data/raw/lit_all.txt'
+    print(f"\nCombining all decades into {output_path}...")
+    with open(output_path, 'a', encoding='utf-8', errors='ignore') as out:
+        for decade in DECADES:
+            src = f'{DATA_PROCESSED_DIR}/lit_{decade}_clean.txt'
+            if os.path.exists(src) and os.path.getsize(src) > 1000:
+                with open(src, 'r', encoding='utf-8', errors='ignore') as f:
+                    out.write(f.read())
+                    out.write('\n\n')
+    size_mb = os.path.getsize(output_path) / 1024 / 1024
+    print(f"lit_all_clean.txt created: {size_mb:.1f} MB")
+
+
+def preprocess_file(input_path, output_path, chunk_size=20):
     """Process a decade corpus file, writing one sentence-chunk per line."""
     print(f"Processing {input_path}...")
     with open(input_path, 'r', encoding='utf-8', errors='ignore') as f:
         text = f.read()
 
     tokens = preprocess_text(text)
-    # Split into chunks of ~200 tokens (pseudo-sentences)
+    # Split into chunks of ~20 tokens (pseudo-sentences)
     chunks = [tokens[i:i + chunk_size] for i in range(0, len(tokens), chunk_size)]
     lines = [' '.join(c) for c in chunks if len(c) > 10]
 
-    with open(output_path, 'w', encoding='utf-8') as f:
+    with open(output_path, 'a', encoding='utf-8') as f:
         f.write('\n'.join(lines))
 
     print(f"  → {len(tokens):,} tokens → {len(lines):,} chunks saved to {output_path}")
@@ -87,16 +103,16 @@ def preprocess_file(input_path, output_path, chunk_size=200):
 
 def pre_process_data():
     # Run preprocessing for all decades
-    decades = ['1800s', '1820s', '1840s', '1860s', '1880s',
-               '1900s', '1920s', '1940s', '1960s']
 
-    os.makedirs('data/processed', exist_ok=True)
+    os.makedirs(DATA_PROCESSED_DIR, exist_ok=True)
 
-    for decade in decades:
+    for decade in DECADES_LIST:
         preprocess_file(
-            f'data/raw/lit_{decade}.txt',
-            f'data/processed/lit_{decade}_clean.txt'
+            f'{DATA_RAW_DIR}/lit_{decade}.txt',
+            f'{DATA_PROCESSED_DIR}/lit_{decade}_clean.txt'
         )
 
+    combine(DATA_CLEAN_TEXT_PATH)
+
     # Also process the combined "all decades" file for the compass
-    preprocess_file('data/raw/lit_all.txt', 'data/processed/lit_all_clean.txt')
+    # preprocess_file('data/raw/lit_all.txt', 'data/processed/lit_all_clean.txt')
