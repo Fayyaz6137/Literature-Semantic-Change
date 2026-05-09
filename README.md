@@ -55,5 +55,5 @@ literature_semantics_project/
 │
 └── Reports/
     ├── Project Report
-    └──Project Slides
+    └── Project Slides
 ```
