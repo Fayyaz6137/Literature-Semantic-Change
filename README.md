@@ -1,6 +1,6 @@
 
 # 🗂 Project Structure
-```bash
+```python
 literature_semantics_project/
 │
 ├── README.md
