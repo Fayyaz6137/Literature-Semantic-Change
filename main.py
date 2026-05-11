@@ -78,6 +78,7 @@ def main():
 
         visualizations.visualize()
 
+
         print("\nVisualizations END\n")
 
 
