@@ -32,7 +32,6 @@ def train_compass():
     if not os.path.exists(compass_text):
         raise FileNotFoundError(
             f'Combined corpus not found at {compass_text}\n'
-            'Run 01_download_corpus.py and 01_preprocessing.py first.'
         )
 
     print('=' * 55)
@@ -142,10 +141,10 @@ def train_slices():
 
     # Quick sanity check
     target = 'awful'
-    print(f'\nSanity check — most similar to "{target}" in each slice:')
+    print(f'\nSanity check: Most similar to "{target}" in each slice:')
     for decade, m in list(slice_models.items())[::3]:  # every 3rd decade
         if target in m.wv:
             nn = [w for w, _ in m.wv.most_similar(target, topn=5)]
             print(f'  {decade}: {nn}')
 
-    print(f'\nNext step: run 08_semantic_change.py')
+

@@ -78,13 +78,13 @@ def compute_change_scores(slice_models):
     records = []
     for word in shared:
 
-        # Remove stopwords like "the", "and", etc.
-        if word in STOPWORDS:
-            continue
+        # # Remove stopwords like "the", "and", etc.
+        # if word in STOPWORDS:
+        #     continue
 
-        # Remove tiny junk words
-        if len(word) < 3:
-            continue
+        # # Remove tiny junk words
+        # if len(word) < 3:
+        #     continue
 
         score = cosine_dist(early_m.wv[word], late_m.wv[word])
         records.append({'word': word, 'change_score': round(score, 6)})
@@ -158,7 +158,7 @@ def run_semantic_change_analysis():
         print('Train CAD Compass and Slices first.')
         return
 
-    # ── Change scores ────────────────────────────────────────────────
+    # Change scores
     df_scores, early_d, late_d = compute_change_scores(slice_models)
 
     os.makedirs(RESULTS_DIR, exist_ok=True)
@@ -179,7 +179,7 @@ def run_semantic_change_analysis():
     print(f'{"─" * 55}')
     print(df_scores.tail(20).iloc[::-1].to_string(index=False))
 
-    # ── Target-word change scores ────────────────────────────────────
+    # Target-word change scores
     print(f'\n{"─" * 55}')
     print('TARGET WORDS — change scores')
     print(f'{"─" * 55}')
@@ -189,7 +189,7 @@ def run_semantic_change_analysis():
     else:
         print('(None of the target words appear in the shared vocabulary)')
 
-    # ── Nearest-neighbour drill-down ─────────────────────────────────
+    # Nearest-neighbour drill-down
     print(f'\n{"─" * 55}')
     print('NEAREST-NEIGHBOUR DRILL-DOWN')
     print(f'{"─" * 55}')
@@ -209,7 +209,7 @@ def run_semantic_change_analysis():
         json.dump(nn_data, f, indent=2)
     print(f'\n✓ Nearest neighbours saved → {out_nn}')
 
-    # ── Drift timeline ────────────────────────────────────────────────
+    # Drift timeline
     df_drift = compute_drift_timeline(TARGET_WORDS, slice_models)
     if not df_drift.empty:
         out_drift = os.path.join(RESULTS_DIR, 'drift_timeline.csv')

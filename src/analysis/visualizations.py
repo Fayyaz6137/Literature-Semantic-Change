@@ -20,6 +20,7 @@ import matplotlib.patches as mpatches
 import seaborn as sns
 from gensim.models import Word2Vec
 from sklearn.decomposition import PCA
+from gensim.parsing.preprocessing import STOPWORDS
 
 from configs.config import RESULTS_DIR, CHANGE_SCORE_PATH, DRIFT_TIMELINE_PATH, FIGURES_DIR, MODEL_CAD_SLICES_DIR, \
     DECADES_LIST, TARGET_WORDS
@@ -66,6 +67,7 @@ def plot1_top_changed_words():
         return
 
     df = pd.read_csv(CHANGE_SCORE_PATH)
+    df = df[~df["word"].str.lower().isin(STOPWORDS)]
     top20 = df.nlargest(20, 'change_score').iloc[::-1]  # reverse for horizontal bar
 
     fig, ax = plt.subplots(figsize=(9, 7))
@@ -124,6 +126,7 @@ def plot2_word_evolution():
         return
 
     df = pd.read_csv(DRIFT_TIMELINE_PATH)
+    df = df[~df["word"].str.lower().isin(STOPWORDS)]
 
     # Filter to target words actually present
     words_present = [w for w in TARGET_WORDS if w in df['word'].values]

@@ -32,7 +32,7 @@ TARGET_WORDS = [
 ]
 
 # ---------------------------- SWITCHES ------------------------------- #
-DEBUG_SWITCH = 1  # DEBUG SWITCH
+DEBUG_SWITCH = 0  # DEBUG SWITCH
 MAX_BOOKS_PER_DECADE = 6 if DEBUG_SWITCH else 200  # how many books to download per period 150
 DELAY = 0.5  # seconds between requests (be polite)
 MIN_LENGTH = 5000  # skip files shorter than this (bad downloads)
